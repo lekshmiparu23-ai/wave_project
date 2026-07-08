@@ -34,27 +34,36 @@ if __name__ == "__main__":
     features = ['wave_height', 'wind_speed', 'pressure', 'sst']
     data_values = df[features].values
     
-    # 2. Normalize Data
+    # 2. Split Data (Chronological split to prevent temporal data leakage)
+    split_idx = int(len(data_values) * 0.8)
+    train_raw, test_raw = data_values[:split_idx], data_values[split_idx:]
+    
+    # 3. Normalize Data
     print("\nNormalizing data using MinMaxScaler...")
     scaler = MinMaxScaler()
-    data_scaled = scaler.fit_transform(data_values)
+    train_scaled = scaler.fit_transform(train_raw)
+    test_scaled = scaler.transform(test_raw)
     
-    # 3. Create Sequences
+    # 4. Create Sequences
     WINDOW_SIZE = 10
     # Target is wave_height, which is at index 0
     TARGET_COL_IDX = 0
     
     print(f"Creating sequences with window size {WINDOW_SIZE}...")
-    X, y = create_sequences(data_scaled, TARGET_COL_IDX, WINDOW_SIZE)
+    X_train, y_train = create_sequences(train_scaled, TARGET_COL_IDX, WINDOW_SIZE)
+    X_test, y_test = create_sequences(test_scaled, TARGET_COL_IDX, WINDOW_SIZE)
     
-    # 4. Print Shapes
+    # 5. Print Shapes
     print("\nData Shapes:")
-    print(f"X shape: {X.shape}")
-    print(f"y shape: {y.shape}")
+    print(f"X_train shape: {X_train.shape}")
+    print(f"y_train shape: {y_train.shape}")
+    print(f"X_test shape: {X_test.shape}")
+    print(f"y_test shape: {y_test.shape}")
     
-    # 5. Explain Dimensions
+    # 6. Explain Dimensions
     print("\nExplanation:")
-    print(f"(samples, time_steps, features) -> ({X.shape[0]}, {X.shape[1]}, {X.shape[2]})")
+    print(f"(samples, time_steps, features) -> ({X_train.shape[0]}, {X_train.shape[1]}, {X_train.shape[2]})")
     print("samples: Number of data points available for training/testing.")
     print("time_steps: The sequence length (how far back the model looks).")
     print("features: Number of input variables (wave_height, wind_speed, pressure, sst).")
+
