@@ -25,6 +25,9 @@ from tensorflow.keras.callbacks import EarlyStopping
 from step2_dataset import load_and_process_data
 from step3_preprocessing import create_sequences
 
+np.random.seed(42)
+tf.random.set_seed(42)
+
 def inverse_transform_target(scaled_y, scaler):
     """
     Helper function to inverse-transform wave height (target at index 0)
