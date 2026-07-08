@@ -39,23 +39,25 @@ def load_and_process_data(filepath):
     features = ['wave_height', 'wind_speed', 'pressure', 'sst']
     df = df[features]
     
-    # 6. Handle missing values
-    # NDBC uses 99.0, 999.0, 9999.0 as missing values
-    # We replace them based on standard NDBC missing value codes or simple logic
-    # WVHT: 99.00
-    # WSPD: 99.00
-    # PRES: 9999.0
-    # WTMP: 999.0
-    
+    # Replace NDBC missing-value sentinel codes with NaN BEFORE resampling
     df['wave_height'] = df['wave_height'].replace(99.00, np.nan)
     df['wind_speed'] = df['wind_speed'].replace(99.00, np.nan)
     df['pressure'] = df['pressure'].replace(9999.0, np.nan)
     df['sst'] = df['sst'].replace(999.0, np.nan)
     
-    # Interpolate to fill missing values (linear interpolation)
+    # Print shape before resampling
+    print(f"Shape before resampling: {df.shape}")
+    
+    # Resample to hourly frequency
+    df = df.resample('1h').mean()
+    
+    # Print shape after resampling
+    print(f"Shape after resampling: {df.shape}")
+    
+    # Interpolate remaining NaN values using method='time'
     df.interpolate(method='time', inplace=True)
     
-    # Drop any remaining NaNs at the start/end
+    # Drop any remaining NaN rows
     df.dropna(inplace=True)
     
     print("Missing values handled.")
