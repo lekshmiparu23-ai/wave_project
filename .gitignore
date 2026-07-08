@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+/wave_model.h5
+/scaler.pkl
+/metrics.pkl
+data/*.gz
+scratch/
