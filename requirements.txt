@@ -3,3 +3,6 @@ pandas
 matplotlib
 scikit-learn
 tensorflow
+streamlit
+plotly
+joblib
