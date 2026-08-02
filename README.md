@@ -21,7 +21,7 @@
 ## 📸 Dashboard Preview
 
 <p align="center">
-  <border><img src="assets/dashboard_hero.png" width="48%" alt="OceanSense dashboard hero and data input table" /></border>
+  <img src="assets/dashboard_hero.png" width="48%" alt="OceanSense dashboard hero and data input table" />
   <img src="assets/prediction_analytics.png" width="48%" alt="Prediction analytics gauge and 24-hour forecast chart" />
 </p>
 
