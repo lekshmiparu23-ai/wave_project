@@ -1,10 +1,14 @@
-import streamlit as st
+import os
+import traceback
+
+import joblib
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-import os
+import streamlit as st
 import tensorflow as tf
-import joblib
+
+from model_utils import get_default_metrics, resolve_model_asset_path
 
 # ==========================================
 # HELPER FUNCTIONS FOR DEEP LEARNING MODEL
@@ -180,18 +184,22 @@ st.markdown(css, unsafe_allow_html=True)
 # ==========================================
 @st.cache_resource
 def load_model_scaler_metrics():
-    model_path = os.path.join('models', 'wave_model.keras')
-    scaler_path = os.path.join('models', 'scaler.pkl')
-    metrics_path = os.path.join('models', 'metrics.pkl')
+    model_path = resolve_model_asset_path('wave_model.keras')
+    scaler_path = resolve_model_asset_path('scaler.pkl')
+    metrics_path = resolve_model_asset_path('metrics.pkl')
     try:
-        model = tf.keras.models.load_model(model_path, compile=False)
-        scaler = joblib.load(scaler_path)
-        metrics = joblib.load(metrics_path)
+        model = tf.keras.models.load_model(str(model_path), compile=False)
+        scaler = joblib.load(str(scaler_path))
+        metrics = joblib.load(str(metrics_path))
         loaded = True
-    except:
+        print("CONFIRMATION: Model assets loaded successfully!", flush=True)
+    except Exception as e:
+        err_msg = f"Error loading model assets: {type(e).__name__}: {e}\n{traceback.format_exc()}"
+        print(err_msg)
+        st.error(err_msg)
         model = None
         scaler = None
-        metrics = {'rmse': 0.0784, 'mae': 0.0510, 'r2': 0.9985, 'rmse_scaled': 0.007}
+        metrics = get_default_metrics()
         loaded = False
     return model, scaler, metrics, loaded
 
@@ -448,7 +456,7 @@ if st.session_state.get('run_predict', False):
                 {state}
             </span>
             <div style="font-family: 'Space Mono', monospace; font-size: 0.68rem; color: #5a6e7f; margin-top: 8px;">
-                RMSE: ±{metrics.get('rmse', 0.078):.3f} m &nbsp;·&nbsp; R² Score: {metrics.get('r2', 0.9985):.4f}
+                RMSE: ±{metrics.get('rmse', 0.3291):.3f} m &nbsp;·&nbsp; R² Score: {metrics.get('r2', 0.9421):.4f}
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -588,7 +596,7 @@ with col_f3:
 col_about, col_use = st.columns([1, 1], gap="large")
 
 with col_about:
-    st.markdown("""
+    st.markdown(f"""
     <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 700; color: #ffffff; margin-top: 40px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em;">
         🤖 About OceanFlow AI Model
     </h3>
@@ -604,7 +612,7 @@ with col_about:
             </tr>
             <tr style="border-bottom: 1px solid #1f2d3d;">
                 <td style="padding: 14px 8px; font-weight: 600; color: #00d4d4; font-size: 0.88rem;">R² Model Score</td>
-                <td style="padding: 14px 8px; color: #ffffff; font-size: 0.88rem;">0.9985 (Test Partition)</td>
+                <td style="padding: 14px 8px; color: #ffffff; font-size: 0.88rem;">{metrics.get('r2', 0.9421):.4f} (Test Partition)</td>
             </tr>
             <tr style="border-bottom: 1px solid #1f2d3d;">
                 <td style="padding: 14px 8px; font-weight: 600; color: #00d4d4; font-size: 0.88rem;">Lookback Window</td>

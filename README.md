@@ -40,6 +40,19 @@ To process data, train the model, and generate predictions:
 python wave_prediction.py
 ```
 
+### 3. Launch the Streamlit App
+To open the interactive forecasting dashboard:
+```powershell
+streamlit run app.py
+```
+
+## Verification
+
+You can verify the repository update locally with:
+```powershell
+pytest -q
+```
+
 ## Results
 
 After running the script, check the project folder for:
