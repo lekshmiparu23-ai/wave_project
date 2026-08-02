@@ -21,10 +21,10 @@
 ## 📸 Dashboard Preview
 
 <p align="center">
-  <img src="assets/dashboard_hero.png" width="90%" alt="OceanSense dashboard hero and data input table" />
+  <img src="assets/dashboard_hero.png" width="48%" alt="OceanSense dashboard hero and data input table" />
 </p>
 <p align="center">
-  <img src="assets/prediction_analytics.png" width="90%" alt="Prediction analytics gauge and 24-hour forecast chart" />
+  <img src="assets/prediction_analytics.png" width="48%" alt="Prediction analytics gauge and 24-hour forecast chart" />
 </p>
 
 <p align="center">
